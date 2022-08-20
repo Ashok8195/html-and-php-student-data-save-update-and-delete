@@ -1,0 +1,104 @@
+<?php
+$host="localhost";
+$uname="root";
+$upass="";
+$dbname="alldata";
+$link= mysqli_connect($host, $uname, $upass ,$dbname);
+    if(isset($_POST["s1"]))
+        {
+           $rolno=$_POST["rollno"];
+           $nam=$_POST["name"];
+           $clas=$_POST["class"];
+           $qry="insert student values($rolno, '$nam','$clas')";
+           $res= mysqli_query($link, $qry);
+           if($r= mysqli_affected_rows($link)>0)
+           {
+            echo 'data save';  
+           }
+            else 
+           {
+            echo 'data not save';
+           }
+        }
+        if(isset($_REQUEST["rollno"]))
+        {
+            $rolno=$_REQUEST["rollno"];
+            $qry="select * from student where rollno=$rolno";
+            $res= mysqli_query($link, $qry);
+            if($r= mysqli_fetch_row($res))
+            {
+                $rolno=$r[0];
+                $name=$r[1];
+                $class=$r[2];
+            }
+        }
+        if(isset($_POST["up"]))
+        {
+            $rolno=$_POST["rollno"];
+            $nam=$_POST["name"];
+            $clas=$_POST["class"];
+            $qry="update student set name='$nam', class='$clas' where rollno=$rolno";
+            $res= mysqli_query($link, $qry)or die(mysqli_error($link)); // there is a die function
+            if(mysqli_affected_rows($link)>0)
+            {
+                echo 'data updated';
+            }
+             else 
+            {
+                echo 'data not updated';
+            }
+        }
+        
+
+?>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        <form name="table" action="studentlogin.php" method="post">
+            <table border="5">
+                <tr>
+                    <td>rollno :</td>
+                    <td>
+                        <input type="text" name="rollno" value="<?php if(isset($rolno)) echo $rolno ?>"/>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>name :</td>
+                    <td>
+                        <input type="text" name="name" value="<?php if(isset($name)) echo $name ?>"/>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>class :</td>
+                    <td>
+                        <input type="text" name="class" value="<?php if(isset($class)) echo $class ?> "/>
+                    </td>
+                </tr>
+                 <tr>
+                    <td colspan="2">
+                        <input type="submit" name="s1" value="save"/>
+                        <input type="submit" name="up" value="update"/>
+                        <input type="submit" name="del" value="delete"/>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                         <?php
+                            $qry="select * from student";
+                             $res= mysqli_query($link, $qry);
+                            while ($r= mysqli_fetch_row($res))
+                            {
+                                echo "<a href=studentlogin.php?rollno=$r[0]>$r[1]</a><br>";
+                            }
+                            ?>
+                    </td>
+                </tr>
+            </table>
+           
+        </form>
+    </body>
+</html>
